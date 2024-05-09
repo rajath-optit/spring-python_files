@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'your-docker-image'
+        KUBE_NAMESPACE = 'your-namespace'
+        KUBE_DEPLOYMENT = 'your-deployment'
+    }
+
+    stages {
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh "kubectl config use-context your-kube-context" // Use the appropriate Kubernetes context
+                    sh "kubectl set image deployment/${KUBE_DEPLOYMENT} ${KUBE_DEPLOYMENT}=${DOCKER_IMAGE}:${env.BUILD_NUMBER} -n ${KUBE_NAMESPACE}"
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                script {
+                    timeout(time: 5, unit: 'minutes') {
+                        // Add script to verify the deployment (e.g., check pod status)
+                        sh "kubectl get pods -n ${KUBE_NAMESPACE}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up any resources if needed
+        }
+        success {
+            // Send success notifications
+        }
+        failure {
+            // Send failure notifications
+        }
+    }
+}

@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: optit-lab-python-service
-  namespace: optit-lab-python
+  name: your-service
 spec:
   selector:
-    app: optit-lab-python-service
+    app: your-app  # Label selector to match the pods belonging to your application
   ports:
     - protocol: TCP
-      port: 8585
-      targetPort: 8585
-  
+      port: 80  # Port exposed by the service
+      targetPort: 8080  # Port on which your application is listening in the pods
+  type: LoadBalancer  # Expose the service outside the cluster using a cloud provider's load balancer

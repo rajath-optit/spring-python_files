@@ -1,13 +1,29 @@
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: optit-lab-python-service
-  namespace: optit-lab-python
+  name:  optit-lab-python1-service
+  namespace: optit-lab-python1
+
 spec:
+  replicas: 3
   selector:
-    app: optit-lab-python-service
-  ports:
-    - protocol: TCP
-      port: 8585
-      targetPort: 8585
-  
+    matchLabels:
+      app:  optit-lab-python1-service
+  template:
+    metadata:
+      labels:
+        app:  optit-lab-python1-service
+    spec:
+      containers:
+      - name:  optit-lab-python1-service
+        image: 
+        ports:
+        - containerPort: 8585
+          name: http
+        resources:
+          limits:
+            cpu: 200m  # Adjust the CPU limit based on your needs
+            memory: 256Mi  # Adjust the memory limit based on your needs
+          requests:
+            cpu: 100m  # Adjust the CPU request based on your needs
+            memory: 128Mi  # Adjust the memory request based on your needs

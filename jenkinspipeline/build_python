@@ -7,23 +7,20 @@ pipeline {
                 script {
                     git branch: 'test_python',
                         credentialsId: 'rajath-my-git-pat',
-                        url: 'https://github.com/rajath-optit/flask-hello-world-devops-project.git'
+                        url: 'https://github.com/optit-cloud-team/optit-lab-python-microservice-example/tree/main'
                     echo "Checked out Git repository"
                 }
             }
         }
 
-        stage('Build with Python') {
+        stage('Build with Pythonoptit-lab-python-microservice-example') {
             steps {
                 script {
-                    // Install dependencies
-                    sh 'pip install flake8 pytest flask'
-
                     // Build Docker image
-                    sh 'docker build -t bharathoptdocker/python:latest .'
+                    sh 'docker build -t '
 
                     // Push Docker image to Docker Hub
-                    sh 'docker push bharathoptdocker/python:latest'
+                    sh 'docker push '
 
                     // Run the Python script in the background
                     sh 'nohup python3 ./app.py > /dev/null 2>&1 &'
@@ -31,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('Docker Publish Python') {
+        stage('Docker Publish optit-lab-python-microservice-example') {
             steps {
                 script {
                     // Docker login using credentials

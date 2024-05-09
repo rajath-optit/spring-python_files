@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'your-docker-image'
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.example.com', 'docker-credentials-id') {
+                        docker.image("${DOCKER_IMAGE}:${env.BUILD_NUMBER}").push()
+                    }
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    docker.image("${DOCKER_IMAGE}:${env.BUILD_NUMBER}").remove()
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up any resources, e.g., remove unused Docker images
+        }
+        success {
+            // Send success notifications
+        }
+        failure {
+            // Send failure notifications
+        }
+    }
+}
