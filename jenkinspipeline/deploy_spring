@@ -17,6 +17,16 @@ pipeline {
             }
         }
 
+        stage('Additional Deployment Steps') {
+            steps {
+                script {
+                    // Deploy the PV and PVC
+                    sh "kubectl apply -f https://k8s.io/examples/application/mysql/mysql-pv.yaml"
+                    sh "kubectl apply -f https://k8s.io/examples/application/mysql/mysql-deployment.yaml"
+                }
+            }
+        }
+
         stage('Verify Deployment') {
             steps {
                 script {
@@ -24,6 +34,15 @@ pipeline {
                         // Add script to verify the deployment (e.g., check pod status)
                         sh "kubectl get pods -n ${KUBE_NAMESPACE}"
                     }
+                }
+            }
+        }
+
+        stage('Access MySQL Instance') {
+            steps {
+                script {
+                    // Run MySQL client to connect to the server
+                    sh "kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -ppassword"
                 }
             }
         }
